@@ -247,9 +247,11 @@ attribute from ``svg-tag-default-face''."
 (defun svg-tag--build-keywords (item)
   "Process an item in order to install it as a new keyword."
     
-  (let* ((pattern  (if (string-match "\\\\(.+\\\\)" (car item))
-                       (car item)
-                     (format "\\(%s\\)" (car item))))
+  (let* ((pattern  (if (stringp (car item))
+                       (if (string-match "\\\\(.+\\\\)" (car item))
+                           (car item)
+                         (format "\\(%s\\)" (car item)))
+                     (car item)))
          (tag      `(funcall ',(nth 0 (cdr item)) (match-string 1)))
          (callback (nth 1 (cdr item)))
          (map (when callback
